@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type Room struct {
@@ -11,20 +12,24 @@ type Room struct {
 	hub   *Hub
 }
 
-func newRoom(items []Item) *Room {
+func newRoom(i []string, o string, l *zap.Logger) *Room {
 	ID, err := uuid.NewRandom()
 	if err != nil {
-		// log.Errorf("Error while creating new room id: %s", err)
+		l.Error("Error while creating new room id", zap.Error(err))
 	}
+	items := make([]Item, len(i))
+	for i, item := range i {
+		items[i] = *newItem(item, l)
+	}
+
 	return &Room{
 		ID:    ID,
 		items: items,
-		owner: "",
+		owner: o,
 		hub:   newHub(),
 	}
 }
 
-func (r *Room) start() {
-	// log.Infof("Starting room: %s", r.ID)
+func (r *Room) Start() {
 	r.hub.run()
 }

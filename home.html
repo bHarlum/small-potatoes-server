@@ -3,6 +3,8 @@
 <head>
 <title>Chat Example</title>
 <script type="text/javascript">
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
 window.onload = function () {
     var conn;
     var msg = document.getElementById("msg");
@@ -29,7 +31,7 @@ window.onload = function () {
     };
 
     if (window["WebSocket"]) {
-        conn = new WebSocket("ws://" + document.location.host + "/ws");
+        conn = new WebSocket("ws://" + document.location.host + "/ws/" + id);
         conn.onclose = function (evt) {
             var item = document.createElement("div");
             item.innerHTML = "<b>Connection closed.</b>";
